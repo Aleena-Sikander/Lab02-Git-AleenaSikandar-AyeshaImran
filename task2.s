@@ -1,46 +1,34 @@
 .text
 .globl main
+
 main:
-    li x20, 2
-    li x22, 1
-    li x23, 2
+    li x10, 5              
+    jal x1, ntri          
 
+    add x11, x10, x0
     li x10, 1
-    li x11, 2
-    li x12, 3
-    li x13, 4
+    ecall
+    j exit
 
-    label1: 
-        add x21, x22, x23
-        beq x0, x0, Exit
+ntri:
+    addi sp, sp, -8       
+    sw x1, 4(sp)          
+    sw x10, 0(sp)          
 
-    label2: 
-        sub x21, x22, x23
-        beq x0, x0, Exit
+    addi x5, x10, -1              
+    bge x5, x0, sum  
 
-    label3:
-        mul x21, x22, x23
-        beq x0, x0, Exit
+    addi sp, sp, 8      
+    jalr x0, 0(x1) 
 
-    label4:
-        div x21, x22, x23
-        beq x0, x0, Exit
-    
-    beq x20, x10, label1
-    beq x20, x11, label2
-    beq x20, x12, label3
-    beq x20, x13, label4
-    
-    bne x20, x10, Else
-    bne x20, x11, Else
-    bne x20, x12, Else
-    bne x20, x13, Else
+sum:
+    addi x10, x10, -1              
+    jal x1, ntri          
+    lw x6, 0(sp)          
+    lw x1, 4(sp)          
+    addi sp, sp, 8
+    add x10, x10, x6       
+    jalr x0, 0(x1)          
 
-Else: li x21, 0
-Exit: 
-
-end:
-    j end
-
-
-    
+exit:
+    j exit    
